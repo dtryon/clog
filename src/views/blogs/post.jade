@@ -1,0 +1,12 @@
+h1 New Post
+form(action='/blogs/post', method='POST')
+	p
+		label(for='post-title') Title:
+	p
+		input(type='text', id='post-title', name='blog[title]', class='edit-title')
+	p
+		label(for='post-body') Body:
+	p
+		textarea(id='post-body', name='blog[body]', class='edit-body')
+	p
+		input(type='submit')
