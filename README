@@ -1,5 +1,5 @@
-CLOG BLOG
+CLOG
 
-A simple blog built with node.js/express/jade
+A simple blog application to explore node.js technologies.
 
-This is meant to be a sample application to learn about node.js
+Requires mongodb to be installed.
