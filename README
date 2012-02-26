@@ -2,4 +2,7 @@ CLOG
 
 A simple blog application to explore node.js technologies.
 
-Requires mongodb to be installed.
+this example uses the express-template by AzzNomad:
+https://github.com/AzzNomad/express-template
+
+Requires mongodb to be installed globally.
