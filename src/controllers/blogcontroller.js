@@ -2,6 +2,7 @@ module.exports = function (app, service) {
 
 	var dateFormatter = service.useModule('dateFormatter');
 	var model = service.useModel('blog');
+	var tagModel = service.useModel('tag');
 
 	/*
 		GET list of blogs page
@@ -27,9 +28,10 @@ module.exports = function (app, service) {
 	*/
 	app.get('/blog/:id', function(req, res){
 	
-			model.BlogPost.findById(req.params.id, function (err, blog){
+		model.BlogPost.findById(req.params.id, function (err, blog){
 	  		
 	  		if (err) {
+	  			console.log(err);
 	  			// do something
 	  		}
 
@@ -38,7 +40,18 @@ module.exports = function (app, service) {
 	  			// do something
 	  		});
 
-	  		res.render('blogs/detail', { title: 'Clog', blog: blog, dateFormatter: dateFormatter });
+	  		var query = tagModel.Tag.find( { _id: { $in : blog.meta.tags } } );
+
+	  		query.exec(function (err, tags) {
+	  			if (err) {
+	  				console.log(err);
+		  			// do something
+		  		}
+	  		
+	  			res.render('blogs/detail', { title: 'Clog', blog: blog, tags: tags, dateFormatter: dateFormatter });	
+	  		});
+
+	  		
 		});
 	});
 
@@ -104,7 +117,7 @@ module.exports = function (app, service) {
 	*/
 	app.post('/blog/delete', function(req, res){
 
-			model.BlogPost.findById(req.body.blog.id, function (err, blog){
+		model.BlogPost.findById(req.body.blog.id, function (err, blog){
 	  		if (err) {
 	  			// do something
 	  		}
@@ -122,7 +135,16 @@ module.exports = function (app, service) {
 	*/
 	app.get('/blogs/post', function(req, res){
 	
-		res.render('blogs/post', { title: 'New Post' });
+		var query = tagModel.Tag.find({});
+
+		query.exec(function (err, tags) {
+			if (err) {
+				console.log(err);
+	  			// do something
+	  		}
+
+			res.render('blogs/post', { title: 'New Post', tagList: tags });
+		});
 	});
 
 	/*
@@ -138,11 +160,29 @@ module.exports = function (app, service) {
 		newBlog.meta.upvotes = 0;
 		newBlog.meta.downvotes = 0;
 		newBlog.meta.favs = 0;
+		newBlog.meta.tags.push(req.body.tag.id);
 
 		newBlog.save(function (err) {
 	  		if (err) {
+	  			console.log(err);
 	  			// do something
 	  		}
+
+	  		tagModel.Tag.findById(req.body.tag.id, function (err, tag){
+			  	if (err) {
+			  		console.log(err);
+			  		// do something
+			  	}
+
+			  	tag.blogs.push(newBlog._id);
+
+			  	tag.save(function (err){
+					if (err) {
+						console.log(err);
+						// do something
+					}
+				}); 
+			});
 
 			res.redirect('/blogs');
 		});

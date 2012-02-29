@@ -1,0 +1,9 @@
+h1= title
+p
+	a(href='/tags/new') Create new tag
+h2 All the tags
+ul#tags!= partial('tag', {collection: tagList});
+p
+	a(href='/') Back
+
+

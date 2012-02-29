@@ -15,9 +15,14 @@ p
 		p
 			textarea(id='comment', name='blog[comment]', class='comment')
 			input(type='submit', value='comment')
-div#comments
-	each comment in blog.comments
-		p= dateFormatter.format(comment.date);
-		p= comment.body
+p
+	div#comments
+		each comment in blog.comments
+			p= dateFormatter.format(comment.date);
+			p= comment.body
+p
+	div#tags
+		each tag in tags
+			p= tag.name
 p 
 	a(href='/blogs') Back

@@ -22,6 +22,7 @@ module.exports = function (mongoose) {
 							, downvotes	: Number
 							, favs		: Number
 							, views		: Number
+							, tags		: [String]
 		}
 	});
 
