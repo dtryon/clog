@@ -1,9 +1,9 @@
-h1= title
+a(href='/') Home
+h1.title= title
 p
 	a(href='/blogs/post') Create new post
 h2 Last 20 posts...
 #blogs!= partial('blog', {collection: blogList, formatter: dateFormatter});
-p
-	a(href='/') Back
+
 
 

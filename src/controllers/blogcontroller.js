@@ -16,6 +16,7 @@ module.exports = function (app, service) {
 
 		query.exec(function (err, blogs) {
 			if (err) {
+				console.log(err);
 	  			// do something
 	  		}
 			res.render('blogs/index', { title: 'Clogs', blogList: blogs, dateFormatter: dateFormatter });
@@ -37,6 +38,7 @@ module.exports = function (app, service) {
 
 	  		blog.meta.views++;
 	  		blog.save(function(err) {
+	  			console.log(err);
 	  			// do something
 	  		});
 
@@ -62,6 +64,7 @@ module.exports = function (app, service) {
 	
 			model.BlogPost.findById(req.body.blogId, function(err, blog){
 			if (err) {
+				console.log(err);
 				// do something
 			}
 
@@ -73,6 +76,7 @@ module.exports = function (app, service) {
 			
 			blog.save(function (err){
 				if (err) {
+					console.log(err);
 					// do something
 				}
 			}); 
@@ -89,6 +93,7 @@ module.exports = function (app, service) {
 	
 			model.BlogPost.findById(req.body.blogId, function(err, blog){
 			if (err) {
+				console.log(err);
 				// do something
 			}
 
@@ -103,6 +108,7 @@ module.exports = function (app, service) {
 			
 			blog.save(function (err){
 				if (err) {
+					console.log(err);
 					// do something
 				}
 			}); 
@@ -119,10 +125,12 @@ module.exports = function (app, service) {
 
 		model.BlogPost.findById(req.body.blog.id, function (err, blog){
 	  		if (err) {
+	  			console.log(err);
 	  			// do something
 	  		}
 
 	  		blog.remove(function(err) {
+	  			console.log(err);
 	  			// do something
 	  		});
 
@@ -160,15 +168,11 @@ module.exports = function (app, service) {
 		newBlog.meta.upvotes = 0;
 		newBlog.meta.downvotes = 0;
 		newBlog.meta.favs = 0;
-		newBlog.meta.tags.push(req.body.tag.id);
 
-		newBlog.save(function (err) {
-	  		if (err) {
-	  			console.log(err);
-	  			// do something
-	  		}
+		if (req.body.tag.id != 'none') {
+			newBlog.meta.tags.push(req.body.tag.id);
 
-	  		tagModel.Tag.findById(req.body.tag.id, function (err, tag){
+			tagModel.Tag.findById(req.body.tag.id, function (err, tag){
 			  	if (err) {
 			  		console.log(err);
 			  		// do something
@@ -183,6 +187,13 @@ module.exports = function (app, service) {
 					}
 				}); 
 			});
+		}
+
+		newBlog.save(function (err) {
+	  		if (err) {
+	  			console.log(err);
+	  			// do something
+	  		}
 
 			res.redirect('/blogs');
 		});

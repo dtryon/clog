@@ -1,4 +1,10 @@
-h1 Clog ME
-a(href='/blogs') See the latest posts
-br
 a(href='/tags') Manage tags
+br
+a(href='/blogs')
+	h1.title Clog Me
+
+h2.subtitle Tags
+ul.no-margin
+	each tag in tags
+		a(href='/tag/' + tag._id.toHexString())
+			li= tag.name

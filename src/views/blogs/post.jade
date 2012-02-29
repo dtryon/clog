@@ -10,8 +10,9 @@ form(action='/blogs/post', method='POST')
 		textarea(id='post-body', name='blog[body]', class='edit-body')
 	p
 		select(id='post-tag', name='tag[id]')
+			option(value='none') -- select --
 			each tag in tagList
-				option(value=value=tag._id.toHexString())= tag.name
+				option(value=tag._id.toHexString())= tag.name
 			
 	p
 		input(type='submit')

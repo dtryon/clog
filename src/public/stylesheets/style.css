@@ -7,6 +7,19 @@ a {
   color: #00B7FF;
 }
 
+ul.no-margin {
+	margin: 0px;
+}
+
+h1.title {
+  margin-top: 40px;
+  margin-bottom: 10px;
+}
+
+h2.subtitle {
+	margin-bottom: 0px;
+}
+
 .edit-body {
 	width: 800px;
 	height: 300px;
@@ -36,4 +49,8 @@ a {
 
 #make-comment {
 	margin: 5px;
+}
+
+#tag-delete {
+	margin-bottom: 10px;
 }

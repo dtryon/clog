@@ -1,6 +1,8 @@
 module.exports = function (app, service) {
 
+	var dateFormatter = service.useModule('dateFormatter');
 	var model = service.useModel('tag');
+	var blogModel = service.useModel('blog');
 	
 	/*
 		GET home page
@@ -16,6 +18,30 @@ module.exports = function (app, service) {
 	  		}
 			res.render('tags/index', { title: 'Clog tags', tagList: tags });
 		});	
+	});
+
+	/*
+		GET tag by id
+	*/
+    app.get('/tag/:id', function(req, res){
+	
+		model.Tag.findById(req.params.id, function (err, tag){
+	  		if (err) {
+	  			console.log(err);
+	  			// do something
+	  		}
+	  		
+	  		var query = blogModel.BlogPost.find( { _id: { $in : tag.blogs } } );
+
+	  		query.exec(function (err, blogs) {
+	  			if (err) {
+	  				console.log(err);
+		  			// do something
+		  		}
+	  		
+	  			res.render('tags/detail', { title: tag.name, blogs: blogs, dateFormatter: dateFormatter });	
+	  		});
+		});
 	});
 
 	/*
@@ -41,6 +67,26 @@ module.exports = function (app, service) {
 	  		}
 
 			res.redirect('/tags');
+		});
+	});
+
+	/*
+		POST delete tag
+	*/
+    app.post('/tags/delete/:id', function(req, res){
+	
+		model.Tag.findById(req.params.id, function (err, tag){
+	  		if (err) {
+	  			console.log(err);
+	  			// do something
+	  		}
+
+	  		tag.remove(function(err) {
+	  			console.log(err);
+	  			// do something
+	  		});
+
+	  		res.redirect('back');
 		});
 	});
 };

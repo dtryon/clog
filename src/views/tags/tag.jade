@@ -1,2 +1,4 @@
 #tag
 	li= tag.name
+		form(id='tag-delete', action='/tags/delete/' + tag._id.toHexString(), method='POST')
+			input(type='submit', value='delete')

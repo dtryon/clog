@@ -22,7 +22,8 @@ p
 			p= comment.body
 p
 	div#tags
-		each tag in tags
-			p= tag.name
+		- if (tags)
+			each tag in tags
+				p= tag.name
 p 
 	a(href='/blogs') Back
