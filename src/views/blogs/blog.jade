@@ -1,10 +1,9 @@
 #blog
-	h2= '> ' + blog.title + ' (' + (blog.meta.upvotes - blog.meta.downvotes) +')'
+	form(action='/blog/delete', class='inline-form', method='POST')
+		input(type='hidden', id='blog-id', name='blog[id]', value=blog._id.toHexString())
+		input(type='submit', value='x')
+	a(href='/blog/' + blog._id.toHexString())
+		h2.inline-form-container= ' ' + blog.title + ' (' + (blog.meta.upvotes - blog.meta.downvotes) +')'
 	- if (blog.date)
 		p= formatter.format(blog.date)
-	p= blog.body
-	p 
-		a(href='/blog/' + blog._id.toHexString()) Go to post
-		form(action='/blog/delete', method='POST')
-			input(type='hidden', id='blog-id', name='blog[id]', value=blog._id.toHexString())
-			input(type='submit', value='delete')
+	p!= blog.body

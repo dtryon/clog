@@ -49,6 +49,8 @@ module.exports = function (app, service) {
 	  				console.log(err);
 		  			// do something
 		  		}
+
+		  		console.log(tags);
 	  		
 	  			res.render('blogs/detail', { title: 'Clog', blog: blog, tags: tags, dateFormatter: dateFormatter });	
 	  		});
@@ -151,7 +153,7 @@ module.exports = function (app, service) {
 	  			// do something
 	  		}
 
-			res.render('blogs/post', { title: 'New Post', tagList: tags });
+			res.render('blogs/post', { layout: 'editor-layout', title: 'New Post', tagList: tags });
 		});
 	});
 
@@ -169,24 +171,32 @@ module.exports = function (app, service) {
 		newBlog.meta.downvotes = 0;
 		newBlog.meta.favs = 0;
 
-		if (req.body.tag.id != 'none') {
-			newBlog.meta.tags.push(req.body.tag.id);
+		if (req.body.tag.ids) {
+			
+			newBlog.meta.tags = req.body.tag.ids;
+			var query = tagModel.Tag.find( { _id: { $in : req.body.tag.ids } } );
 
-			tagModel.Tag.findById(req.body.tag.id, function (err, tag){
-			  	if (err) {
-			  		console.log(err);
-			  		// do something
-			  	}
+			query.exec(function (err, tags) {
+	  			if (err) {
+	  				console.log(err);
+		  			// do something
+		  		}
 
-			  	tag.blogs.push(newBlog._id);
+		  		if (tags) {
+			  		for(i=0; i<tags.length; i++) {
+			  			var tag = tags[i];
+			  			
+			  			tag.blogs.push(newBlog._id);
 
-			  	tag.save(function (err){
-					if (err) {
-						console.log(err);
-						// do something
-					}
-				}); 
-			});
+					  	tag.save(function (err){
+							if (err) {
+								console.log(err);
+								// do something
+							}
+						}); 
+			  		}	
+		  		}  		
+	  		});
 		}
 
 		newBlog.save(function (err) {

@@ -1,3 +1,4 @@
+a(href='/blogs') Back
 form(action=/blog/vote', method='POST', class='make-vote')
 	input(type='hidden', id='blog-id', name='blog[id]', value=blog._id.toHexString())
 	input(class='upvote', type='submit', name='voteType', value='+')
@@ -5,7 +6,7 @@ form(action=/blog/vote', method='POST', class='make-vote')
 	input(class='downvote', type='submit', name='voteType', value='-')
 h1= blog.title
 p= dateFormatter.format(blog.date) + ' [Views ' + blog.meta.views + ']';
-p Body: #{blog.body}
+p!= blog.body
 
 p 
 	form(id='make-comment', action='/blog/comment', method='POST')
@@ -25,5 +26,3 @@ p
 		- if (tags)
 			each tag in tags
 				p= tag.name
-p 
-	a(href='/blogs') Back

@@ -21,12 +21,26 @@ h2.subtitle {
 }
 
 .edit-body {
-	width: 800px;
-	height: 300px;
+	width: 1000px;
+	height: 500px;
 }
 
 .edit-title {
-	width: 800px;
+	width: 600px;
+}
+
+.inline-label {
+	overflow: hidden; 
+	float:left;
+}
+
+.inline-form {
+	overflow: hidden; 
+	float:left;
+}
+
+.inline-button {
+
 }
 
 .comment {
@@ -53,4 +67,14 @@ h2.subtitle {
 
 #tag-delete {
 	margin-bottom: 10px;
+}
+
+ul.tag {
+	list-style-type: none;
+}
+
+.tag {
+	font-size: 18px;
+	margin: 5px 0px 10px 0px;
+	padding: 2px 0px 2px 4px;
 }

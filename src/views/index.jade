@@ -3,8 +3,8 @@ br
 a(href='/blogs')
 	h1.title Clog Me
 
-h2.subtitle Tags
-ul.no-margin
+h2.subtitle Filter by tag:
+ul.tag
 	each tag in tags
 		a(href='/tag/' + tag._id.toHexString())
 			li= tag.name
