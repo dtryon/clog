@@ -55,6 +55,10 @@ h2.subtitle {
 	text-decoration: none;
 }
 
+.upvote {
+	margin-top: 30px;
+}
+
 #votes {
 	padding: 0;
 	margin: 5px;
