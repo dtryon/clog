@@ -173,8 +173,14 @@ module.exports = function (app, service) {
 
 		if (req.body.tag.ids) {
 			
-			newBlog.meta.tags = req.body.tag.ids;
-			var query = tagModel.Tag.find( { _id: { $in : req.body.tag.ids } } );
+			var query;
+			if (req.body.tag.ids instanceof Array) {
+				
+				newBlog.meta.tags = req.body.tag.ids;
+				query = tagModel.Tag.find( { _id: { $in : req.body.tag.ids } } );
+			} else {
+				query = tagModel.Tag.find( { _id: { $in : [req.body.tag.ids] } } );
+			}
 
 			query.exec(function (err, tags) {
 	  			if (err) {
