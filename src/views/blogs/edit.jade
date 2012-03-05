@@ -1,0 +1,28 @@
+a(href='/blogs') Back
+h1 Edit Clog
+form(action='/blogs/edit', method='POST')
+	input(type='hidden', id='blog-id', name='blog[id]', value=blog._id.toHexString())
+	p
+		label(for='post-title') Title:
+	p
+		input(type='text', id='post-title', name='blog[title]', class='edit-title', value=blog.title)
+	p
+		label(for='post-body') Body:
+	p
+		textarea(id='post-body', name='blog[body]', class='edit-body')
+	p
+		each tag in tagList
+			- if (tag.name in selectedTags)
+				input(type='checkbox', name='tag[ids]', checked='checked', value=tag._id.toHexString())
+			- else
+				input(type='checkbox', name='tag[ids]', value=tag._id.toHexString())
+			=tag.name
+			br		
+	p
+		input(type='submit', value='edit')
+script(type='text/javascript', language='javascript')
+	<!--
+	$(window).load(function() {
+		tinyMCE.activeEditor.setContent('!{blog.body}');
+	});
+	-->

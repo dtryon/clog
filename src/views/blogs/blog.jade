@@ -7,3 +7,4 @@
 	- if (blog.date)
 		p= formatter.format(blog.date)
 	p!= blog.body
+	a(href='/blog/edit/' + blog._id.toHexString()) edit

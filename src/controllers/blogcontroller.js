@@ -4,6 +4,12 @@ module.exports = function (app, service) {
 	var model = service.useModel('blog');
 	var tagModel = service.useModel('tag');
 
+	function cleanQuotes(body) {
+
+		body = body.replace(/\'/g, '\"');
+		return body;
+	}
+
 	/*
 		GET list of blogs page
 	*/
@@ -49,13 +55,118 @@ module.exports = function (app, service) {
 	  				console.log(err);
 		  			// do something
 		  		}
-
-		  		console.log(tags);
 	  		
 	  			res.render('blogs/detail', { title: 'Clog', blog: blog, tags: tags, dateFormatter: dateFormatter });	
 	  		});
 
 	  		
+		});
+	});
+
+	/*
+		GET edit page for blog
+	*/
+	app.get('/blog/edit/:id', function(req, res){
+	
+		model.BlogPost.findById(req.params.id, function (err, blog){
+	  		
+	  		if (err) {
+	  			console.log(err);
+	  			// do something
+	  		}
+
+	  		var query = tagModel.Tag.find({});
+
+			query.exec(function (err, tagList) {
+				if (err) {
+					console.log(err);
+		  			// do something
+		  		}
+
+		  		var query = tagModel.Tag.find( { _id: { $in : blog.meta.tags } } );
+
+		  		query.exec(function (err, tags) {
+		  			if (err) {
+		  				console.log(err);
+			  			// do something
+			  		}
+
+			  		var selectedTags = [];
+
+			  		if (tags) {
+			  			for(i=0;i<tags.length;i++) {
+			  				selectedTags.push(tags[i].name);
+			  			}
+			  		}
+
+		  			res.render('blogs/edit', { layout: 'editor-layout', title: 'Clog', blog: blog, tagList: tagList, selectedTags: selectedTags });	
+		  		});
+		  	});
+		});
+	});
+
+	/*
+		POST edit a blog
+	*/
+	app.post('/blogs/edit', function(req, res){
+
+		model.BlogPost.findById(req.body.blog.id, function (err, blog){
+	  		if (err) {
+	  			console.log(err);
+	  			// do something
+	  		}
+
+	  		if (blog.title != req.body.blog.title) {
+	  			blog.title = req.body.blog.title;
+	  		}
+
+	  		if (blog.body != req.body.blog.body) {
+	  			blog.body = cleanQuotes(req.body.blog.body);
+	  		}
+
+	  		if (req.body.tag.ids) {
+			
+				var query;
+				if (req.body.tag.ids instanceof Array) {
+					
+					blog.meta.tags = req.body.tag.ids;
+					query = tagModel.Tag.find( { _id: { $in : req.body.tag.ids } } );
+				} else {
+					blog.meta.tags.push(req.body.tag.ids);
+					query = tagModel.Tag.find( { _id: { $in : [req.body.tag.ids] } } );
+				}
+
+				query.exec(function (err, tags) {
+		  			if (err) {
+		  				console.log(err);
+			  			// do something
+			  		}
+
+			  		if (tags) {
+				  		for(i=0; i<tags.length; i++) {
+				  			var tag = tags[i];
+				  			
+				  			tag.blogs.push(blog._id);
+
+						  	tag.save(function (err){
+								if (err) {
+									console.log(err);
+									// do something
+								}
+							}); 
+				  		}	
+			  		}  		
+		  		});
+			}
+
+			blog.save(function (err) {
+		  		if (err) {
+		  			console.log(err);
+		  			// do something
+		  		}
+
+				res.redirect('/blogs');
+			});
 		});
 	});
 
@@ -165,7 +276,7 @@ module.exports = function (app, service) {
 		var newBlog = new model.BlogPost();
 		newBlog.date = new Date();
 		newBlog.title = req.body.blog.title;
-		newBlog.body = req.body.blog.body; 
+		newBlog.body = cleanQuotes(req.body.blog.body); 
 		newBlog.meta.views = 0;
 		newBlog.meta.upvotes = 0;
 		newBlog.meta.downvotes = 0;
@@ -174,11 +285,11 @@ module.exports = function (app, service) {
 		if (req.body.tag.ids) {
 			
 			var query;
-			if (req.body.tag.ids instanceof Array) {
-				
+			if (req.body.tag.ids instanceof Array) {	
 				newBlog.meta.tags = req.body.tag.ids;
 				query = tagModel.Tag.find( { _id: { $in : req.body.tag.ids } } );
 			} else {
+				newBlog.meta.tags.push(req.body.tag.ids);
 				query = tagModel.Tag.find( { _id: { $in : [req.body.tag.ids] } } );
 			}
 
@@ -216,4 +327,5 @@ module.exports = function (app, service) {
 
 	});
 };
+
 
