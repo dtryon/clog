@@ -10,6 +10,7 @@ form(action='/blogs/edit', method='POST')
 		label(for='post-body') Body:
 	p
 		textarea(id='post-body', name='blog[body]', class='edit-body')
+			#{blog.body}
 	p
 		each tag in tagList
 			- if (tag.name in selectedTags)
@@ -20,9 +21,3 @@ form(action='/blogs/edit', method='POST')
 			br		
 	p
 		input(type='submit', value='edit')
-script(type='text/javascript', language='javascript')
-	<!--
-	$(window).load(function() {
-		tinyMCE.activeEditor.setContent('!{blog.body}');
-	});
-	-->

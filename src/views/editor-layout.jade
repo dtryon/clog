@@ -1,11 +1,34 @@
 !!!
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    block scripts
-      script(type='text/javascript', src='/javascripts/jquery-1.7.1.min.js')
-      script(type='text/javascript', src='/javascripts/clog.js')
-      script(type='text/javascript', src='/javascripts/tiny_mce/tiny_mce.js')
-      script(type='text/javascript', src='/javascripts/editor.js')
-  body!= body
+	head
+		title= title
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		link(type='text/css', rel='stylesheet', href='/stylesheets/syntaxhighlighter/shCore.css')
+		link(type='text/css', rel='stylesheet', href='/stylesheets/syntaxhighlighter/shThemeDefault.css')
+		block /javascripts/syntaxhighlighter
+			script(type='text/javascript', src='/javascripts/jquery-1.7.1.min.js')
+			script(type='text/javascript', src='/javascripts/clog.js')
+			script(type='text/javascript', src='/javascripts/tiny_mce/tiny_mce.js')
+			script(type='text/javascript', src='/javascripts/editor.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shCore.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushBash.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushCpp.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushCSharp.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushCss.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushDelphi.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushDiff.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushGroovy.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushJava.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushJScript.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushPhp.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushPlain.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushPython.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushRuby.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushScala.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushSql.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushVb.js')
+			script(type='text/javascript', language='javascript', src='/javascripts/syntaxhighlighter/shBrushXml.js')
+			script(type='text/javascript', language='javascript')
+				SyntaxHighlighter.config.clipboardSwf = '/flash/syntaxhighlighter/clipboard.swf';
+				SyntaxHighlighter.all();	
+	body!= body
