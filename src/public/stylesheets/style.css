@@ -12,12 +12,30 @@ ul.no-margin {
 }
 
 h1.title {
-  margin-top: 40px;
-  margin-bottom: 10px;
+  	margin-top: 40px;
+  	margin-bottom: 10px;
 }
 
 h2.subtitle {
-	margin-bottom: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+
+a:link {
+	text-decoration: none;
+}
+
+a:visited {
+	text-decoration: none;
+}
+
+a:active {
+	text-decoration: none;
+}
+
+p.subtitle {
+	margin: 0px;
+	padding: 0px;
 }
 
 .edit-body {
@@ -81,4 +99,14 @@ ul.tag {
 	font-size: 18px;
 	margin: 5px 0px 10px 0px;
 	padding: 2px 0px 2px 4px;
+}
+
+#blog {
+	padding: 10px;
+	background-color: #EEEEEE;
+	margin-bottom: 10px;
+	width: 70%;
+	border-style:dotted;
+	border-color:#DDDDDD;
+	border-radius: 2px;
 }

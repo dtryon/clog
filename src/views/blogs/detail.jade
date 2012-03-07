@@ -1,4 +1,6 @@
 a(href='/blogs') Back
+&nbsp;|
+a(href='/blog/edit/' + blog._id.toHexString()) edit
 form(action=/blog/vote', method='POST', class='make-vote')
 	input(type='hidden', id='blog-id', name='blog[id]', value=blog._id.toHexString())
 	input(class='upvote', type='submit', name='voteType', value='+')

@@ -3,8 +3,8 @@
 		input(type='hidden', id='blog-id', name='blog[id]', value=blog._id.toHexString())
 		input(type='submit', value='x')
 	a(href='/blog/' + blog._id.toHexString())
-		h2.inline-form-container= ' ' + blog.title + ' (' + (blog.meta.upvotes - blog.meta.downvotes) +')'
+		h2.subtitle= ' ' + blog.title + ' (' + (blog.meta.upvotes - blog.meta.downvotes) +')'
 	- if (blog.date)
-		p= formatter.format(blog.date)
+		p.subtitle= formatter.format(blog.date)
 	p!= blog.body
 	a(href='/blog/edit/' + blog._id.toHexString()) edit
