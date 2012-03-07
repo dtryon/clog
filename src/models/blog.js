@@ -21,7 +21,7 @@ module.exports = function (mongoose) {
 							  upvotes	: Number
 							, downvotes	: Number
 							, favs		: Number
-							, views		: Number
+							, uniqueIPs : [String]
 							, tags		: [String]
 		}
 	});

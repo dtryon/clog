@@ -36,7 +36,24 @@ module.exports = function (app, service) {
 	  			// do something
 	  		}
 
-	  		blog.meta.views++;
+	  		var newIP = true;
+	  		if (blog.meta.uniqueIPs) {
+
+	  			var registeredIPs = blog.meta.uniqueIPs;
+	  			for(i=0;i<registeredIPs.length;i++) {
+	  				if (registeredIPs[i] == req.connection.remoteAddress) {
+	  					
+	  					newIP = false;
+	  				}
+	  			}
+	  		} else {
+	  			blog.meta.uniqueIPs = [];
+	  		}
+
+	  		if (newIP) {
+	  			blog.meta.uniqueIPs.push(req.connection.remoteAddress);
+	  		}
+
 	  		blog.save(function(err) {
 	  			console.log(err);
 	  			// do something
@@ -289,7 +306,7 @@ module.exports = function (app, service) {
 			newBlog.date = new Date();
 			newBlog.title = req.body.blog.title;
 			newBlog.body = req.body.blog.body; 
-			newBlog.meta.views = 0;
+			newBlog.meta.uniqueIPs = [];
 			newBlog.meta.upvotes = 0;
 			newBlog.meta.downvotes = 0;
 			newBlog.meta.favs = 0;

@@ -5,7 +5,7 @@ form(action=/blog/vote', method='POST', class='make-vote')
 	h2#votes= blog.meta.upvotes - blog.meta.downvotes
 	input(class='downvote', type='submit', name='voteType', value='-')
 h1= blog.title
-p= dateFormatter.format(blog.date) + ' [Views ' + blog.meta.views + ']';
+p= dateFormatter.format(blog.date) + ' [Views ' + blog.meta.uniqueIPs.length + ']';
 p!= blog.body
 
 p 
