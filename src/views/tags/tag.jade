@@ -1,4 +1,5 @@
-form(id='tag-delete', class='inline-form', action='/tags/delete/' + tag._id.toHexString(), method='POST')
-	input(type='submit', value='x')
-div.tag= tag.name
+form(class='inline-form', action='/tags/delete/' + tag._id.toHexString(), method='POST')
+	li.tag-edit 
+		input(class='tag-edit-button', type='submit', value='x')
+		#{tag.name}
 	

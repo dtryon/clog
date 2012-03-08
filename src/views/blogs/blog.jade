@@ -1,10 +1,15 @@
 #blog
 	form(action='/blog/delete', class='inline-form', method='POST')
 		input(type='hidden', id='blog-id', name='blog[id]', value=blog._id.toHexString())
-		input(type='submit', value='x')
+		input(class='blog-delete-button', type='submit', value='x')
 	a(href='/blog/' + blog._id.toHexString())
 		h2.subtitle= ' ' + blog.title + ' (' + (blog.meta.upvotes - blog.meta.downvotes) +')'
 	- if (blog.date)
 		p.subtitle= formatter.format(blog.date)
 	p!= blog.body
+	- if (blog.meta.tags)
+		ul.tags
+			each tag in tagList
+				- if (blog.meta.tags.indexOf(tag._id) != -1)
+					li.tag= tag.name
 	a(href='/blog/edit/' + blog._id.toHexString()) edit

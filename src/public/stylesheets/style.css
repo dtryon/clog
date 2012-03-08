@@ -91,14 +91,51 @@ p.subtitle {
 	margin-bottom: 10px;
 }
 
-ul.tag {
-	list-style-type: none;
+ul.tags {
+	padding: 0px;
+	margin: 0px 0px 10px 0px;
 }
 
-.tag {
-	font-size: 18px;
-	margin: 5px 0px 10px 0px;
-	padding: 2px 0px 2px 4px;
+ul.tags a {
+	color: #000000;
+}
+
+li.tag {
+	list-style-type: none;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 2px;
+	margin-right: 6px;
+	background-color: #DDDDDD;
+	border-style:solid;
+	border-color:#CCCCCC;
+	border-radius: 1px;
+	display: inline;
+}
+
+li.tag-edit {
+	list-style-type: none;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 2px 4px 2px 2px;
+	margin-right: 6px;
+	background-color: #DDDDDD;
+	border-style:solid;
+	border-color:#CCCCCC;
+	border-radius: 1px;
+	display: inline;
+}
+
+.tag-edit-button {
+	background-color: #DDDDDD;
+	border-style:none;
+	padding: 0px;
+	margin: 3px;
+}
+
+.tag-edit-button:hover {
+	color: #888888;
+	cursor:pointer;
 }
 
 #blog {
@@ -109,4 +146,18 @@ ul.tag {
 	border-style:dotted;
 	border-color:#DDDDDD;
 	border-radius: 2px;
+}
+
+.blog-delete-button {
+	background-color: #EEEEEE;
+	border-style:none;
+	font-size: 16px;
+	vertical-align: middle;
+	padding: 0px;
+	margin: 3px;
+}
+
+.blog-delete-button:hover {
+	color: #888888;
+	cursor:pointer;
 }

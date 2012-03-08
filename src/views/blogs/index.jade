@@ -3,7 +3,7 @@ h1.title= title
 p
 	a(href='/blogs/post') Create new post
 h2 Last 20 posts...
-#blogs!= partial('blog', {collection: blogList, formatter: dateFormatter});
+#blogs!= partial('blog', {collection: blogList, tagList: tagList, formatter: dateFormatter});
 
 
 

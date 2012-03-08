@@ -23,8 +23,8 @@ p
 		each comment in blog.comments
 			p= dateFormatter.format(comment.date);
 			p= comment.body
-p
-	div#tags
-		- if (tags)
+div
+	- if (tags)
+		ul.tags
 			each tag in tags
-				p= tag.name
+				li.tag= tag.name

@@ -3,7 +3,7 @@ h1.title= title
 p
 	a(href='/tags/new') Create new tag
 h2 All the tags
-div#tags!= partial('tag', {collection: tagList});
+ul.tags!= partial('tag', {collection: tagList});
 
 
 

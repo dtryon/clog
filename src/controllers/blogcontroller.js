@@ -19,7 +19,17 @@ module.exports = function (app, service) {
 				console.log(err);
 	  			// do something
 	  		}
-			res.render('blogs/index', { title: 'Clogs', blogList: blogs, dateFormatter: dateFormatter });
+
+	  		var query = tagModel.Tag.find({});
+
+			query.exec(function (err, tags) {
+				if (err) {
+					console.log(err);
+		  			// do something
+		  		}
+
+				res.render('blogs/index', { title: 'Clogs', blogList: blogs, tagList: tags, dateFormatter: dateFormatter });
+			});
 		});
 		
 	});
