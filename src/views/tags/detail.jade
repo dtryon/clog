@@ -1,6 +1,6 @@
 a(href='/') Back
 h1.title= title
 - if (blogs)
-	#blogs!= partial('./blogs/blog', {collection: blogs, formatter: dateFormatter});
+	#blogs!= partial('./blogs/blog', {collection: blogs, tagList: tagList, formatter: dateFormatter});
 
 	

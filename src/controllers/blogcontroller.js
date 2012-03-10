@@ -11,6 +11,7 @@ module.exports = function (app, service) {
 		
 		var query = model.BlogPost.find({});
 
+		query.where('date').lte(new Date());
 		query.desc('date');
 		query.limit(20);
 
@@ -142,6 +143,12 @@ module.exports = function (app, service) {
 	  		if (blog.title != req.body.blog.title) {
 	  			blog.title = req.body.blog.title;
 	  		}
+
+	  		if (req.body.blog.date) {
+		  		if (blog.date != new Date(req.body.blog.date)) {
+		  			blog.date = new Date(req.body.blog.date);
+		  		}
+		  	}
 
 	  		if (blog.body != req.body.blog.body) {
 	  			blog.body = req.body.blog.body;
@@ -313,7 +320,12 @@ module.exports = function (app, service) {
 
 		if (req.body.blog.title != '') {
 			var newBlog = new model.BlogPost();
-			newBlog.date = new Date();
+
+			if (req.body.blog.date) {
+				newBlog.date = new Date(req.body.blog.date);
+			} else {
+				newBlog.date = new Date();
+			}
 			newBlog.title = req.body.blog.title;
 			newBlog.body = req.body.blog.body; 
 			newBlog.meta.uniqueIPs = [];

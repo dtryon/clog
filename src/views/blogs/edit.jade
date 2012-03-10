@@ -3,9 +3,11 @@ h1 Edit Clog
 form(action='/blogs/edit', method='POST')
 	input(type='hidden', id='blog-id', name='blog[id]', value=blog._id.toHexString())
 	p
-		label(for='post-title') Title:
-	p
+		label(for='post-title') Title:&nbsp;
 		input(type='text', id='post-title', name='blog[title]', class='edit-title', value=blog.title)
+	p
+		label(for='post-date') Publish Date:&nbsp
+		input(type='text', id='post-date', name='blog[date]')
 	p
 		label(for='post-body') Body:
 	p

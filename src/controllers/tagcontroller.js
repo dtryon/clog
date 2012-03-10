@@ -32,14 +32,23 @@ module.exports = function (app, service) {
 	  		}
 	  		
 	  		var query = blogModel.BlogPost.find( { _id: { $in : tag.blogs } } );
-
+	  		query.where('date').lte(new Date());
+	  		
 	  		query.exec(function (err, blogs) {
 	  			if (err) {
 	  				console.log(err);
 		  			// do something
 		  		}
-	  		
-	  			res.render('tags/detail', { title: tag.name, blogs: blogs, dateFormatter: dateFormatter });	
+
+		  		var query = model.Tag.find({});
+
+				query.exec(function (err, tags) {
+					if (err) {
+						console.log(err);
+			  			// do something
+			  		}
+					res.render('tags/detail', { title: tag.name, blogs: blogs, tagList: tags, dateFormatter: dateFormatter });	
+				});	
 	  		});
 		});
 	});

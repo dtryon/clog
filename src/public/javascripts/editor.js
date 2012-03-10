@@ -28,4 +28,16 @@ $(function() {
 
 		remove_linebreaks : false
 	});
+
+
+	var postDate = $('#post-date');
+	if (postDate) {
+		postDate.datepicker({
+			showOn: 'button',
+			buttonImage: '/images/calendar.gif',
+			buttonImageOnly: true
+		});
+		postDate.datepicker('setDate', new Date('!{blog.date}'));
+	}
+
 });

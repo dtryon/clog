@@ -2,9 +2,11 @@ a(href='/blogs') Back
 h1 New Clog
 form(action='/blogs/post', method='POST')
 	p
-		label(for='post-title') Title:
-	p
+		label(for='post-title') Title:&nbsp;
 		input(type='text', id='post-title', name='blog[title]', class='edit-title')
+	p
+		label(for='post-date') Publish Date:&nbsp
+		input(type='text', id='post-date', name='blog[date]')
 	p
 		label(for='post-body') Body:
 	p
