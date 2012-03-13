@@ -105,25 +105,24 @@ module.exports = function (app, service) {
 		  			// do something
 		  		}
 
-		  		console.log(blog.meta.tags);
-
 		  		var query = tagModel.Tag.find( { _id: { $in : blog.meta.tags } } );
 
-		  		query.exec(function (err, tags) {
+		  		query.exec(function (err, selectedTags) {
 		  			if (err) {
 		  				console.log(err);
 			  			// do something
 			  		}
 
-			  		var selectedTags = {};
+					var selected = '';
+			  		if(selectedTags) {
+				  		for(i=0;i<selectedTags.length;i++) {
+				  			selected += selectedTags[i].name + ',';
+				  		}
+				  	}
 
-			  		if (tags) {
-			  			for(i=0;i<tags.length;i++) {
-			  				selectedTags[tags[i].name] = tags[i].name;
-			  			}
-			  		}
+			  		selected = selected.substring(0, selected.length-1);
 
-		  			res.render('blogs/edit', { layout: 'editor-layout', title: 'Clog', blog: blog, tagList: tagList, selectedTags: selectedTags });	
+		  			res.render('blogs/edit', { layout: 'editor-layout', title: 'Clog', blog: blog, tagList: tagList, selectedTags: selectedTags, selected: selected });	
 		  		});
 		  	});
 		});
@@ -154,64 +153,56 @@ module.exports = function (app, service) {
 	  			blog.body = req.body.blog.body;
 	  		}
 
-	  		blog.meta.tags = [];
+	  		if (req.body.tag) {
+	  			blog.meta.tags = [];
+	  			var array = req.body.tag.names.split(',');
+		  		var query = tagModel.Tag.find( { name: { $in : array } } );
 
-	  		blog.save(function (err) {
-		  		if (err) {
-		  			console.log(err);
-		  			// do something
-		  		}
+		  		query.exec(function (err, tags) {
+		  			if (err) {
+		  				console.log(err);
+			  			// do something
+			  		}
 
-		  		if (req.body.tag) {
+			  		if (tags) {
+			  			for(i=0; i<tags.length; i++) {
+				  			var tag = tags[i];
 
-					var query;
-					if (req.body.tag.ids instanceof Array) {
-						
-						blog.meta.tags = req.body.tag.ids;
-						query = tagModel.Tag.find( { _id: { $in : req.body.tag.ids } } );
-					} else {
-						
-						blog.meta.tags.push(req.body.tag.ids);
-						query = tagModel.Tag.find( { _id: { $in : [req.body.tag.ids] } } );
-					}
+				  			if (blog.meta.tags.indexOf(tag._id) == -1) {
+				  				blog.meta.tags.push(tag._id);
+				  			}
 
-					query.exec(function (err, tags) {
-			  			if (err) {
-			  				console.log(err);
-				  			// do something
+				  			if (tag.blogs.indexOf(blog._id) == -1) {
+				  				tag.blogs.push(blog._id);
+				  			}
+
+				  			tag.save(function (err){
+								if (err) {
+									console.log(err);
+									// do something
+								}
+
+								blog.save(function (err) {
+							  		if (err) {
+							  			console.log(err);
+							  			// do something
+							  		}									
+								});
+							}); 
 				  		}
-
-				  		if (tags) {
-					  		for(i=0; i<tags.length; i++) {
-					  			var tag = tags[i];
-					  			
-					  			if (tag.blogs.indexOf(blog._id) == -1) {
-					  				tag.blogs.push(blog._id);
-					  			}
-
-							  	tag.save(function (err){
-									if (err) {
-										console.log(err);
-										// do something
-									}
-								}); 
-					  		}	
-				  		}  		
-			  		});
-				}
-
-				console.log(blog.meta.tags);
+			  		}
+			  	});
+	  		} else {
 
 				blog.save(function (err) {
 			  		if (err) {
 			  			console.log(err);
 			  			// do something
 			  		}
-
-					res.redirect('/blogs');
 				});
-					  		
-			});
+			}
+
+			res.redirect('/blogs');
 		});
 	});
 
@@ -335,49 +326,61 @@ module.exports = function (app, service) {
 
 			if (req.body.tag) {
 				
-				var query;
-				if (req.body.tag.ids instanceof Array) {	
-					newBlog.meta.tags = req.body.tag.ids;
-					query = tagModel.Tag.find( { _id: { $in : req.body.tag.ids } } );
-				} else {
-					newBlog.meta.tags.push(req.body.tag.ids);
-					query = tagModel.Tag.find( { _id: { $in : [req.body.tag.ids] } } );
-				}
+	  			var array = req.body.tag.names.split(',');
+		  		var query = tagModel.Tag.find( { name: { $in : array } } );
 
-				query.exec(function (err, tags) {
+		  		query.exec(function (err, tags) {
 		  			if (err) {
 		  				console.log(err);
 			  			// do something
 			  		}
 
 			  		if (tags) {
-				  		for(i=0; i<tags.length; i++) {
+			  			for(i=0; i<tags.length; i++) {
 				  			var tag = tags[i];
 				  			
-				  			tag.blogs.push(newBlog._id);
+				  			newBlog.meta.tags.push(tag._id);
+
+				  			if (tag.blogs.indexOf(newBlog._id) == -1) {
+				  				tag.blogs.push(newBlog._id);
+				  			}
 
 						  	tag.save(function (err){
 								if (err) {
 									console.log(err);
 									// do something
 								}
-							}); 
-				  		}	
-			  		}  		
+
+								newBlog.save(function (err) {
+							  		if (err) {
+							  			console.log(err);
+							  			// do something
+							  		}
+
+							  		res.redirect('/blogs');
+								}); 
+				  			});	
+			  			}  	
+			  		}	
+		  		});
+
+			} else {
+
+				newBlog.save(function (err) {
+			  		if (err) {
+			  			console.log(err);
+			  			// do something
+					}
+
+					res.redirect('/blogs');
 		  		});
 			}
 
-			newBlog.save(function (err) {
-		  		if (err) {
-		  			console.log(err);
-		  			// do something
-		  		}
-
-				res.redirect('/blogs');
-			});
 		} else {
 			res.redirect('back');
 		}
+
+		
 	});
 };
 

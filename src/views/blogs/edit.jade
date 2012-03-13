@@ -13,13 +13,51 @@ form(action='/blogs/edit', method='POST')
 	p
 		textarea(id='post-body', name='blog[body]', class='edit-body')
 			#{blog.body}
+	p		
+		div.selectTags
+			label(for='tags') Tags:&nbsp
+			input(type='text', id='tags')	
+			input(type='hidden', id='selectedTags', name='tag[names]', value=selected)
 	p
-		each tag in tagList
-			- if (tag.name in selectedTags)
-				input(type='checkbox', name='tag[ids]', checked='checked', value=tag._id.toHexString())
-			- else
-				input(type='checkbox', name='tag[ids]', value=tag._id.toHexString())
-			=tag.name
-			br		
+		ul.tags
+			- if (selectedTags)
+				each tag in selectedTags
+					li.tag= tag.name
+			
+			
 	p
 		input(type='submit', value='edit')
+
+	- var names = ''
+	- for(i=0; i<tagList.length; i++) {
+	-		names += '"' + tagList[i].name + '"' + ',' 
+	- }
+
+	script
+		$(function() {
+			$('#tags').focus(function() {
+				$(this).val('');
+			});
+
+			var searchableTags = [!{names}];
+			$('#tags').autocomplete({
+				source: searchableTags,
+				select: function(event, ui) {
+					
+					var hdnValue = $('#selectedTags').val();
+					
+					if (!hdnValue) {
+						$('#selectedTags').val(ui.item.value);
+					} else {
+						if (hdnValue.indexOf(ui.item.value) == -1) {
+							$('#selectedTags').val(hdnValue + ',' + ui.item.value);
+
+							var newLi = '<li class="tag">' + ui.item.value + '</li>';
+							$('ul.tags').append(newLi);
+						}
+					}
+
+					return false;
+				}
+			});
+		});
