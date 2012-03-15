@@ -153,57 +153,58 @@ module.exports = function (app, service) {
 	  			blog.body = req.body.blog.body;
 	  		}
 
+	  		var array = [];
+	  		var newTags = [];
 	  		if (req.body.tag) {
-	  			blog.meta.tags = [];
-	  			var array = req.body.tag.names.split(',');
-		  		var query = tagModel.Tag.find( { name: { $in : array } } );
+	  			array = req.body.tag.names.split(',');
+	  		}
+		  	
+		  	var query = tagModel.Tag.find( { name: { $in : array } } );
 
-		  		query.exec(function (err, tags) {
-		  			if (err) {
-		  				console.log(err);
-			  			// do something
-			  		}
+		  	query.exec(function (err, tags) {
+	  			if (!tags) {
+	  				console.log(err);
+		  			// do something
 
-			  		if (tags) {
-			  			for(i=0; i<tags.length; i++) {
-				  			var tag = tags[i];
-
-				  			if (blog.meta.tags.indexOf(tag._id) == -1) {
-				  				blog.meta.tags.push(tag._id);
-				  			}
-
-				  			if (tag.blogs.indexOf(blog._id) == -1) {
-				  				tag.blogs.push(blog._id);
-				  			}
-
-				  			tag.save(function (err){
-								if (err) {
-									console.log(err);
-									// do something
-								}
-
-								blog.save(function (err) {
-							  		if (err) {
-							  			console.log(err);
-							  			// do something
-							  		}									
-								});
-							}); 
+					blog.save(function (err) {
+				  		if (err) {
+				  			console.log(err);
+				  			// do something
 				  		}
-			  		}
-			  	});
-	  		} else {
+					});
+		  		} else {
+		  			for(i=0; i<tags.length; i++) {
+			  			var tag = tags[i];
+			  			
+			  			console.log(tag.name);
+			  			newTags.push(tag._id);
+			  			console.log(newTags);
 
-				blog.save(function (err) {
-			  		if (err) {
-			  			console.log(err);
-			  			// do something
-			  		}
-				});
-			}
+			  			if (tag.blogs.indexOf(blog._id) == -1) {
+			  				tag.blogs.push(blog._id);
+			  			}
 
-			res.redirect('/blogs');
+			  			tag.save(function (err){
+							if (err) {
+								console.log(err);
+								// do something
+							}
+
+							blog.meta.tags = newTags;
+							console.log(newTags);
+							blog.save(function (err) {
+						  		if (err) {
+						  			console.log(err);
+						  			// do something
+						  		}
+							});
+						}); 
+			  		}
+			  	}
+			});
 		});
+
+		res.redirect('/blogs');
 	});
 
 	/*
@@ -309,78 +310,68 @@ module.exports = function (app, service) {
 	*/
 	app.post('/blogs/post', function(req, res){
 
-		if (req.body.blog.title != '') {
-			var newBlog = new model.BlogPost();
+		var newBlog = new model.BlogPost();
 
-			if (req.body.blog.date) {
-				newBlog.date = new Date(req.body.blog.date);
-			} else {
-				newBlog.date = new Date();
-			}
-			newBlog.title = req.body.blog.title;
-			newBlog.body = req.body.blog.body; 
-			newBlog.meta.uniqueIPs = [];
-			newBlog.meta.upvotes = 0;
-			newBlog.meta.downvotes = 0;
-			newBlog.meta.favs = 0;
+		if (req.body.blog.date) {
+			newBlog.date = new Date(req.body.blog.date);
+		} else {
+			newBlog.date = new Date();
+		}
+		newBlog.title = req.body.blog.title;
+		newBlog.body = req.body.blog.body; 
+		newBlog.meta.uniqueIPs = [];
+		newBlog.meta.upvotes = 0;
+		newBlog.meta.downvotes = 0;
+		newBlog.meta.favs = 0;
 
-			if (req.body.tag) {
-				
-	  			var array = req.body.tag.names.split(',');
-		  		var query = tagModel.Tag.find( { name: { $in : array } } );
+		var array = [];
 
-		  		query.exec(function (err, tags) {
-		  			if (err) {
-		  				console.log(err);
-			  			// do something
-			  		}
+		if (req.body.tag) {
+			
+  			array = req.body.tag.names.split(',');
+	  	}
 
-			  		if (tags) {
-			  			for(i=0; i<tags.length; i++) {
-				  			var tag = tags[i];
-				  			
-				  			newBlog.meta.tags.push(tag._id);
+	  	var query = tagModel.Tag.find( { name: { $in : array } } );
 
-				  			if (tag.blogs.indexOf(newBlog._id) == -1) {
-				  				tag.blogs.push(newBlog._id);
-				  			}
+	  	query.exec(function (err, tags) {
+  			if (!tags) {
+  				console.log(err);
+	  			// do something
 
-						  	tag.save(function (err){
-								if (err) {
-									console.log(err);
-									// do something
-								}
-
-								newBlog.save(function (err) {
-							  		if (err) {
-							  			console.log(err);
-							  			// do something
-							  		}
-
-							  		res.redirect('/blogs');
-								}); 
-				  			});	
-			  			}  	
-			  		}	
-		  		});
-
-			} else {
-
-				newBlog.save(function (err) {
+	  			newBlog.save(function (err) {
 			  		if (err) {
 			  			console.log(err);
 			  			// do something
 					}
-
-					res.redirect('/blogs');
 		  		});
-			}
+	  		} else {
+	  			for(i=0; i<tags.length; i++) {
+	  				var tag = tags[i];
 
-		} else {
-			res.redirect('back');
-		}
+	  				newBlog.meta.tags.push(tag._id);
 
-		
+	  				if (tag.blogs.indexOf(newBlog._id) == -1) {
+		  				tag.blogs.push(newBlog._id);
+		  			}
+
+		  			tag.save(function (err){
+						if (err) {
+							console.log(err);
+							// do something
+						}
+
+						newBlog.save(function (err) {
+					  		if (err) {
+					  			console.log(err);
+					  			// do something
+					  		}
+						}); 
+		  			});
+	  			}
+	  		}	
+  		});
+
+		res.redirect('/blogs');
 	});
 };
 

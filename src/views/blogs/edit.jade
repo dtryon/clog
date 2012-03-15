@@ -22,7 +22,9 @@ form(action='/blogs/edit', method='POST')
 		ul.tags
 			- if (selectedTags)
 				each tag in selectedTags
-					li.tag= tag.name
+					li.tag
+						a(id='remove_tag:' + tag.name, class='remove-tag') x
+						#{tag.name}
 			
 			
 	p
@@ -33,11 +35,39 @@ form(action='/blogs/edit', method='POST')
 	-		names += '"' + tagList[i].name + '"' + ',' 
 	- }
 
-	script
+	script		
 		$(function() {
 			$('#tags').focus(function() {
 				$(this).val('');
 			});
+
+			function bindRemoveTag () {
+
+				$('a[id^="remove_tag:"]').bind('click', function(event) {
+
+					var tagName = event.target.id.split(':')[1];
+					var hdnValue = $('#selectedTags').val();
+						
+					if (hdnValue) {
+						var hdnValueArray = hdnValue.split(',');
+
+						var newHdnValue = '';
+						for(i=0;i<hdnValueArray.length;i++) {
+							if (hdnValueArray[i] != tagName) {
+								newHdnValue += hdnValueArray[i] + ',';
+							}
+						}
+
+						newHdnValue = newHdnValue.substring(0, newHdnValue.length-1);
+
+						$('#selectedTags').val(newHdnValue);
+					} 
+
+					$(this).closest('li').remove();
+				});
+			}
+
+			bindRemoveTag();
 
 			var searchableTags = [!{names}];
 			$('#tags').autocomplete({
@@ -52,9 +82,11 @@ form(action='/blogs/edit', method='POST')
 						if (hdnValue.indexOf(ui.item.value) == -1) {
 							$('#selectedTags').val(hdnValue + ',' + ui.item.value);
 
-							var newLi = '<li class="tag">' + ui.item.value + '</li>';
+							var newLi = '<li class="tag"><a id="remove_tag:' + ui.item.value + '" class="remove-tag">x<a/>' + ui.item.value + '</li>';
 							$('ul.tags').append(newLi);
-						}
+
+							bindRemoveTag();
+						} 
 					}
 
 					return false;

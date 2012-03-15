@@ -138,6 +138,15 @@ li.tag-edit {
 	cursor:pointer;
 }
 
+li.tag a {
+	margin: 3px;
+}
+
+li.tag a:hover {
+	color: #888888;
+	cursor:pointer;
+}
+
 #blog {
 	padding: 10px;
 	background-color: #EEEEEE;
