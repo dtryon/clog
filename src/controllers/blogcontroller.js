@@ -171,14 +171,14 @@ module.exports = function (app, service) {
 				  			console.log(err);
 				  			// do something
 				  		}
+
+				  		res.redirect('/blogs');
 					});
 		  		} else {
 		  			for(i=0; i<tags.length; i++) {
 			  			var tag = tags[i];
 			  			
-			  			console.log(tag.name);
 			  			newTags.push(tag._id);
-			  			console.log(newTags);
 
 			  			if (tag.blogs.indexOf(blog._id) == -1) {
 			  				tag.blogs.push(blog._id);
@@ -189,22 +189,21 @@ module.exports = function (app, service) {
 								console.log(err);
 								// do something
 							}
-
-							blog.meta.tags = newTags;
-							console.log(newTags);
-							blog.save(function (err) {
-						  		if (err) {
-						  			console.log(err);
-						  			// do something
-						  		}
-							});
 						}); 
 			  		}
+
+			  		blog.meta.tags = newTags;
+					blog.save(function (err) {
+				  		if (err) {
+				  			console.log(err);
+				  			// do something
+				  		}
+
+				  		res.redirect('/blogs');
+					});
 			  	}
 			});
 		});
-
-		res.redirect('/blogs');
 	});
 
 	/*
@@ -342,7 +341,11 @@ module.exports = function (app, service) {
 			  		if (err) {
 			  			console.log(err);
 			  			// do something
+			  			console.trace();
 					}
+
+					console.trace();
+					res.redirect('/blogs');
 		  		});
 	  		} else {
 	  			for(i=0; i<tags.length; i++) {
@@ -359,19 +362,20 @@ module.exports = function (app, service) {
 							console.log(err);
 							// do something
 						}
-
-						newBlog.save(function (err) {
-					  		if (err) {
-					  			console.log(err);
-					  			// do something
-					  		}
-						}); 
 		  			});
 	  			}
+
+	  			newBlog.save(function (err) {
+			  		if (err) {
+			  			console.log(err);
+			  			// do something
+			  			console.trace();
+			  		}
+
+			  		res.redirect('/blogs');
+				}); 
 	  		}	
   		});
-
-		res.redirect('/blogs');
 	});
 };
 
