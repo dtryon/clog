@@ -7,7 +7,7 @@ form(action='/blogs/edit', method='POST')
 		input(type='text', id='post-title', name='blog[title]', class='edit-title', value=blog.title)
 	p
 		label(for='post-date') Publish Date:&nbsp
-		input(type='text', id='post-date', name='blog[date]')
+		input(type='text', id='post-date', name='blog[date]', value=blog.date)
 	p
 		label(for='post-body') Body:
 	p
