@@ -1,8 +1,22 @@
 a(href='/') Home
 h1.title= title
 p
-	a(href='/blogs/post') Create new post
-h2 Last 20 posts...
+	a(href='/blog/post/new') Create new post
+h2 Last #{limit} posts...
+ul.blogs-limit
+	li
+		a(href='/blogs/5') 5
+	li
+		a(href='/blogs/10') 10
+	li
+		a(href='/blogs/20') 20
+	li
+		a(href='/blogs/30') 30
+	li
+		a(href='/blogs/50') 50
+	li
+		a(href='/blogs/100') 100
+
 #blogs!= partial('blog', {collection: blogList, tagList: tagList, formatter: dateFormatter});
 
 

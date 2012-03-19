@@ -8,13 +8,22 @@ module.exports = function (app, service) {
 	/*
 		GET list of blogs page
 	*/
-	app.get('/blogs', function(req, res){
+	app.get('/blogs/:num?', function(req, res){
 		
 		var query = model.BlogPost.find({});
 
 		query.where('date').lte(new Date());
 		query.desc('date');
-		query.limit(20);
+		
+		var theLimit = 20;
+		if (req.params.num) {
+			theLimit = parseInt(req.params.num);
+			if (!isNaN(theLimit)) {
+				query.limit(theLimit);	
+			}
+		} else {
+			query.limit(theLimit);
+		}	
 
 		query.exec(function (err, blogs) {
 			if (err) {
@@ -30,7 +39,7 @@ module.exports = function (app, service) {
 		  			// do something
 		  		}
 
-				res.render('blogs/index', { title: 'Clogs', blogList: blogs, tagList: tags, dateFormatter: dateFormatter });
+				res.render('blogs/index', { title: 'Clogs', blogList: blogs, limit: theLimit, tagList: tags, dateFormatter: dateFormatter });
 			});
 		});
 		
@@ -114,9 +123,9 @@ module.exports = function (app, service) {
 	/*
 		POST edit a blog
 	*/
-	app.post('/blogs/edit', function(req, res){
+	app.post('/blog/edit/:id', function(req, res){
 
-		model.BlogPost.findById(req.body.blog.id, function (err, blog){
+		model.BlogPost.findById(req.params.id, function (err, blog){
 	  		if (err) {
 	  			console.log(err);
 	  			// do something
@@ -192,9 +201,9 @@ module.exports = function (app, service) {
 	/*
 		POST a comment
 	*/
-	app.post('/blog/comment', function(req, res){
+	app.post('/blog/comment/:id', function(req, res){
 	
-			model.BlogPost.findById(req.body.blogId, function(err, blog){
+			model.BlogPost.findById(req.params.id, function(err, blog){
 			if (err) {
 				console.log(err);
 				// do something
@@ -221,9 +230,9 @@ module.exports = function (app, service) {
 	/*
 		POST a vote
 	*/
-	app.post('/blog/vote', function(req, res){
+	app.post('/blog/vote/:id', function(req, res){
 	
-			model.BlogPost.findById(req.body.blogId, function(err, blog){
+			model.BlogPost.findById(req.params.id, function(err, blog){
 			if (err) {
 				console.log(err);
 				// do something
@@ -253,9 +262,9 @@ module.exports = function (app, service) {
 	/*
 		POST delete blog
 	*/
-	app.post('/blog/delete', function(req, res){
+	app.post('/blog/delete/:id', function(req, res){
 
-		model.BlogPost.findById(req.body.blog.id, function (err, blog){
+		model.BlogPost.findById(req.params.id, function (err, blog){
 	  		if (err) {
 	  			console.log(err);
 	  			// do something
@@ -273,7 +282,7 @@ module.exports = function (app, service) {
 	/*
 		GET blog post form
 	*/
-	app.get('/blogs/post', function(req, res){
+	app.get('/blog/post/new', function(req, res){
 	
 		var query = tagModel.Tag.find({});
 
@@ -290,7 +299,7 @@ module.exports = function (app, service) {
 	/*
 		POST new blog
 	*/
-	app.post('/blogs/post', function(req, res){
+	app.post('/blog/post/new', function(req, res){
 
 		var newBlog = new model.BlogPost();
 

@@ -1,8 +1,7 @@
 a(href='/blogs') Back
 &nbsp;|
 a(href='/blog/edit/' + blog._id.toHexString()) edit
-form(action=/blog/vote', method='POST', class='make-vote')
-	input(type='hidden', id='blog-id', name='blog[id]', value=blog._id.toHexString())
+form(action='/blog/vote/' + blog._id.toHexString(), method='POST', class='make-vote')
 	input(class='upvote', type='submit', name='voteType', value='+')
 	h2#votes= blog.meta.upvotes - blog.meta.downvotes
 	input(class='downvote', type='submit', name='voteType', value='-')
@@ -11,8 +10,7 @@ p= dateFormatter.format(blog.date) + ' [Views ' + blog.meta.uniqueIPs.length + '
 p!= blog.body
 
 p 
-	form(id='make-comment', action='/blog/comment', method='POST')
-		input(type='hidden', id='blog-id', name='blog[id]', value=blog._id.toHexString())
+	form(id='make-comment', action='/blog/comment/' + blog._id.toHexString(), method='POST')
 		p
 			label(for='comment') Submit a comment:
 		p
@@ -28,3 +26,9 @@ div
 		ul.tags
 			each tag in tags
 				li.tag= tag.name
+script		
+	$(function() {
+		bindVotingEvents('#{blog._id.toHexString()}');	
+		bindCommentEvents('#{blog._id.toHexString()}');
+	});
+	

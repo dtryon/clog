@@ -157,6 +157,18 @@ li.tag a:hover {
 	border-radius: 2px;
 }
 
+ul.blogs-limit {
+	padding: 0px;
+	margin: 0px 0px 10px 0px;	
+}
+
+ul.blogs-limit li {
+	display: inline;
+	list-style-type: none;
+	padding: 2px 4px 2px 2px;
+	margin-right: 6px;
+}
+
 .blog-delete-button {
 	background-color: #EEEEEE;
 	border-style:none;

@@ -1,4 +1,4 @@
-$(function() {
+function initEditor() {
 	tinyMCE.init({
 		// General options
 		mode : "textareas",
@@ -28,8 +28,9 @@ $(function() {
 
 		remove_linebreaks : false
 	});
+}
 
-
+function initDateSelector(currentDate) {
 	var postDate = $('#post-date');
 	if (postDate) {
 		postDate.datepicker({
@@ -37,7 +38,68 @@ $(function() {
 			buttonImage: '/images/calendar.gif',
 			buttonImageOnly: true
 		});
-		postDate.datepicker('setDate', new Date('!{blog.date}'));
+		postDate.datepicker('setDate', new Date(currentDate));
+	}
+}
+
+function initTags(names) {
+	$('#tags').focus(function() {
+		$(this).val('');
+	});
+
+	function bindRemoveTag () {
+
+		$('a[id^="remove_tag:"]').bind('click', function(event) {
+
+			var tagName = event.target.id.split(':')[1];
+			var hdnValue = $('#selectedTags').val();
+				
+			if (hdnValue) {
+				var hdnValueArray = hdnValue.split(',');
+
+				var newHdnValue = '';
+				for(i=0;i<hdnValueArray.length;i++) {
+					if (hdnValueArray[i] != tagName) {
+						newHdnValue += hdnValueArray[i] + ',';
+					}
+				}
+
+				newHdnValue = newHdnValue.substring(0, newHdnValue.length-1);
+
+				$('#selectedTags').val(newHdnValue);
+			} 
+
+			$(this).closest('li').remove();
+		});
 	}
 
-});
+	bindRemoveTag();
+
+	function addLi (name) {
+		var newLi = '<li class="tag"><a id="remove_tag:' + name + '" class="remove-tag">x<a/>' + name + '</li>';
+		$('ul.tags').append(newLi);
+
+		bindRemoveTag();
+	}
+
+	var searchableTags = names;
+	$('#tags').autocomplete({
+		source: searchableTags,
+		select: function(event, ui) {
+			
+			var hdnValue = $('#selectedTags').val();
+			
+			if (!hdnValue) {
+				$('#selectedTags').val(ui.item.value);
+				addLi(ui.item.value);
+			} else {
+				if (hdnValue.indexOf(ui.item.value) == -1) {
+					$('#selectedTags').val(hdnValue + ',' + ui.item.value);
+					addLi(ui.item.value);
+				} 
+			}
+
+			return false;
+		}
+	});
+}

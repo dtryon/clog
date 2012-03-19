@@ -1,6 +1,5 @@
 #blog
-	form(action='/blog/delete', class='inline-form', method='POST')
-		input(type='hidden', id='blog-id', name='blog[id]', value=blog._id.toHexString())
+	form(action='/blog/delete/' + blog._id.toHexString(), class='inline-form', method='POST')
 		input(class='blog-delete-button', type='submit', value='x')
 	a(href='/blog/' + blog._id.toHexString())
 		h2.subtitle= ' ' + blog.title + ' (' + (blog.meta.upvotes - blog.meta.downvotes) +')'
