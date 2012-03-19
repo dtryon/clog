@@ -1,6 +1,7 @@
 module.exports = function (app, service) {
 
 	var dateFormatter = service.useModule('dateFormatter');
+	var uniqueVisit = service.useModule('uniqueVisit');
 	var model = service.useModel('blog');
 	var tagModel = service.useModel('tag');
 
@@ -47,23 +48,7 @@ module.exports = function (app, service) {
 	  			// do something
 	  		}
 
-	  		var newIP = true;
-	  		if (blog.meta.uniqueIPs) {
-
-	  			var registeredIPs = blog.meta.uniqueIPs;
-	  			for(i=0;i<registeredIPs.length;i++) {
-	  				if (registeredIPs[i] == req.connection.remoteAddress) {
-	  					
-	  					newIP = false;
-	  				}
-	  			}
-	  		} else {
-	  			blog.meta.uniqueIPs = [];
-	  		}
-
-	  		if (newIP) {
-	  			blog.meta.uniqueIPs.push(req.connection.remoteAddress);
-	  		}
+	  		blog.meta.uniqueIPs = uniqueVisit.recordVisit(blog.meta.uniqueIPs, req.connection.remoteAddress);
 
 	  		blog.save(function(err) {
 	  			console.log(err);
@@ -80,8 +65,6 @@ module.exports = function (app, service) {
 	  		
 	  			res.render('blogs/detail', { title: 'Clog', blog: blog, tags: tags, dateFormatter: dateFormatter });	
 	  		});
-
-	  		
 		});
 	});
 

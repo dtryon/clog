@@ -1,7 +1,7 @@
 var express = require('express');
 var app = module.exports = express.createServer();
 var environment = require('./environment');
-var service = require('./service.js');
+var service = require('./service');
     service.init(environment);
 
 require('./configuration')(app, express);
