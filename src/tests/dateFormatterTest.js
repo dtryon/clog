@@ -8,6 +8,6 @@ exports.dateShouldPrintCorrectly = function(test){
     var result = target.format(date);
 
     // then
-    test.equal('25/12/1995 11:15 PM', result);
+    test.equal('25/12/1995', result);
     test.done();
 };
