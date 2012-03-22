@@ -1,7 +1,6 @@
 module.exports = function (app, service) {
 
 	var dateFormatter = service.useModule('dateFormatter');
-	var uniqueVisit = service.useModule('uniqueVisit');
 	var model = service.useModel('blog');
 	var tagModel = service.useModel('tag');
 
@@ -15,15 +14,9 @@ module.exports = function (app, service) {
 		query.where('date').lte(new Date());
 		query.desc('date');
 		
-		var theLimit = 20;
-		if (req.params.num) {
-			theLimit = parseInt(req.params.num);
-			if (!isNaN(theLimit)) {
-				query.limit(theLimit);	
-			}
-		} else {
-			query.limit(theLimit);
-		}	
+		var pageLimiter = service.useModule('pageLimiter');
+		var pageLimit = pageLimiter.resolveLimit(req.params.num);
+		query.limit(pageLimit);
 
 		query.exec(function (err, blogs) {
 			if (err) {
@@ -39,7 +32,7 @@ module.exports = function (app, service) {
 		  			// do something
 		  		}
 
-				res.render('blogs/index', { title: 'Clogs', blogList: blogs, limit: theLimit, tagList: tags, dateFormatter: dateFormatter });
+				res.render('blogs/index', { title: 'Clogs', blogList: blogs, limit: pageLimit, tagList: tags, dateFormatter: dateFormatter });
 			});
 		});
 		
@@ -57,6 +50,7 @@ module.exports = function (app, service) {
 	  			// do something
 	  		}
 
+	  		var uniqueVisit = service.useModule('uniqueVisit');
 	  		blog.meta.uniqueIPs = uniqueVisit.recordVisit(blog.meta.uniqueIPs, req.connection.remoteAddress);
 
 	  		blog.save(function(err) {
@@ -238,14 +232,9 @@ module.exports = function (app, service) {
 				// do something
 			}
 
-			if(req.body.voteType == '+')
-			{
-				blog.meta.upvotes++;
-			} else {
-				blog.meta.downvotes++;
-			}
-
-			var voteCount = blog.meta.upvotes - blog.meta.downvotes;
+			var voter = service.useModule('voter');
+			voter.recordVote(req.body.voteType, blog);
+			var voteCount = voter.countVotes(blog);
 			
 			blog.save(function (err){
 				if (err) {

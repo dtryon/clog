@@ -18,7 +18,7 @@ function initEditor() {
 		theme_advanced_resizing : true,
 
 		// Example content CSS (should be your site CSS)
-		content_css : "/stylesheets/style.css",
+		//content_css : "/stylesheets/style.css",
 
 		// Drop lists for link/image/media/template dialogs
 		template_external_list_url : "/javascripts/template_list.js",
